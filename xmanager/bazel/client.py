@@ -14,7 +14,7 @@
 """A module for communicating with the Bazel server."""
 
 import abc
-from typing import Generic, Optional, Sequence, TypeVar
+from typing import Any, Generic, Optional, Sequence, TypeVar
 
 import attr
 
@@ -30,11 +30,19 @@ class BuildResult(Generic[T]):
     build_id: The unique identifier for the build invocation (e.g., Sponge ID).
     skycache_outcome: Whether Skycache was enabled for the build, and if not,
       why. Corresponds to the `SkycacheDetails.Outcome` enum.
+    portable_manifest_paths: Per-architecture manifest paths for multiarch
+      support. Typed as `Any` to avoid a circular dependency on `xm`. At runtime
+      this is: - `list[dict[xm.Architecture, str]]` (one per target) when
+      returned from a batched build in `build_targets.py`. -
+      `dict[xm.Architecture, str]` after being unpacked per-target in
+      `router.py`. - `None` for non-multiarch builds or when manifest paths are
+      absent.
   """
 
   resources: T
   build_id: Optional[str] = None
   skycache_outcome: int = 0
+  portable_manifest_paths: Optional[Any] = None
 
 
 class BazelService(abc.ABC):
