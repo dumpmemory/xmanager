@@ -100,7 +100,7 @@ class Client:
         )
       all_env_vars = {**executable.env_vars, **job.env_vars}
       env = [k8s_client.V1EnvVar(k, v) for k, v in all_env_vars.items()]
-      job_name = convert_to_valid_label(get_full_job_name(job.name))  # pyrefly: ignore[bad-argument-type]
+      job_name = convert_to_valid_label(get_full_job_name(job.name))
       container = k8s_client.V1Container(
           name=job_name,
           image=executable.image_path,

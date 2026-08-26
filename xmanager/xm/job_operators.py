@@ -45,10 +45,10 @@ def populate_job_names(job_type: job_blocks.JobTypeVar) -> None:
   def matcher(prefix: Sequence[str], job_type: job_blocks.JobTypeVar) -> None:
     match job_type:
       case job_blocks.Job() as target:
-        if target.name is None:  # pytype: disable=attribute-error
+        if not target.name:
           target.name = '_'.join(prefix) if prefix else target.executable.name
       case job_blocks.JobGroup() as target:
-        for key, job in target.jobs.items():  # pytype: disable=attribute-error
+        for key, job in target.jobs.items():
           matcher([*prefix, key], job)  # pyrefly: ignore[bad-argument-type]
       case _:
         return
@@ -180,8 +180,8 @@ def get_jobs(job_group: job_blocks.JobGroup) -> dict[str, job_blocks.JobType]:
   for key, value in job_group.jobs.items():
     match value:
       case job_blocks.Job():
-        _check_job_exists(value.name, jobs)  # pyrefly: ignore[bad-argument-type]
-        jobs[str(value.name)] = value
+        _check_job_exists(value.name, jobs)
+        jobs[value.name] = value
       case job_blocks.JobGroup():
         jobs.update(get_jobs(value))
       case _:

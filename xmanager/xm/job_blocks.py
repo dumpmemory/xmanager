@@ -17,7 +17,7 @@ import abc
 import functools
 import itertools
 import re
-from typing import Any, Awaitable, Callable, Dict, List, Mapping, Optional, Sequence, Tuple, TypeVar, Union
+from typing import Any, Awaitable, Callable, Dict, List, Mapping, Optional, Sequence, Tuple, TypeVar, Union, overload
 
 import attr
 from xmanager.xm import utils
@@ -413,7 +413,7 @@ class Job:
 
   executable: Executable
   executor: Executor
-  name: Optional[str] = None
+  name: str = attr.ib(default='', converter=lambda x: '' if x is None else x)
   args: SequentialArgs = attr.ib(  # pyrefly: ignore[bad-assignment]
       factory=list, converter=SequentialArgs.from_collection
   )  # pytype: disable=annotation-type-mismatch
@@ -469,10 +469,23 @@ class JobGroup:
   jobs: Dict[str, JobType]
   constraints: List[Constraint]
 
+  @overload
+  def __init__(self, **jobs: JobType) -> None:
+    ...
+
+  @overload
   def __init__(
       self,
       *,
-      constraints: Optional[Sequence[Constraint]] = None,
+      constraints: Sequence[Constraint] | None = None,
+      **jobs: JobType,
+  ) -> None:
+    ...
+
+  def __init__(
+      self,
+      *,
+      constraints: Sequence[Constraint] | None = None,
       **jobs: JobType,
   ) -> None:
     """Builds a JobGroup.

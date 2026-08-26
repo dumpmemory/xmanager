@@ -392,7 +392,7 @@ class ExperimentUnit(abc.ABC):
       _current_experiment.set(self.experiment)
       _current_experiment_unit.set(self)
       return self._launch_job_group(
-          job_blocks.JobGroup(**{job.name: job}),  # pyrefly: ignore[bad-unpacking]
+          job_blocks.JobGroup(**{job.name: job}),
           _work_unit_arguments(job, self._args),
           identity,
       )
