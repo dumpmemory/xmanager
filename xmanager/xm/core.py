@@ -603,8 +603,8 @@ class WorkUnitCompletedAwaitable(Coroutine):
   def send(self, value: Any) -> Any:
     return self._wait_coro.send(value)
 
-  def throw(self, typ, val=None, tb=None) -> Any:
-    return self._wait_coro.throw(typ, val, tb)
+  def throw(self, *args: Any, **kwargs: Any) -> Any:
+    return self._wait_coro.throw(*args, **kwargs)
 
   def close(self) -> None:
     self._wait_coro.close()
