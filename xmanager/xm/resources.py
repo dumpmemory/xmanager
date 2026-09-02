@@ -135,7 +135,7 @@ class ServiceTier(enum.Enum, metaclass=_CaseInsensitiveServiceTierMeta):
 _DEFAULT_SERVICE_TIER = ServiceTier.PROD
 
 
-def _enum_subset(class_name: str, values: Iterable[ResourceType]) -> type:  # pylint: disable=g-bare-generic
+def _enum_subset(class_name: str, values: Iterable[ResourceType]) -> Any:
   """Returns an enum subset class.
 
   The class is syntactically equivalent to an enum with the given resource
